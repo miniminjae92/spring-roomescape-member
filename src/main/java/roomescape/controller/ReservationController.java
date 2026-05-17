@@ -19,6 +19,7 @@ import roomescape.controller.dto.reservation.ReservationResponse;
 import roomescape.controller.dto.reservation.ReservationResponses;
 import roomescape.controller.dto.reservation.ReservationScheduleRequest;
 import roomescape.service.ReservationService;
+import roomescape.service.dto.reservation.ReservationPagingCondition;
 import roomescape.service.dto.reservation.ReservationResult;
 
 @RestController
@@ -30,9 +31,12 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<ReservationResponses> getReservations(
-            @RequestParam String name
+            @RequestParam String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
     ) {
-        List<ReservationResponse> responses = reservationService.getReservationsByName(name).stream()
+        ReservationPagingCondition condition = new ReservationPagingCondition(page, size);
+        List<ReservationResponse> responses = reservationService.getReservationHistoryByName(name, condition).stream()
                 .map(ReservationResponse::from)
                 .toList();
         return ResponseEntity.ok(new ReservationResponses(responses));

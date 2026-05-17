@@ -45,6 +45,27 @@ class ReservationApiTest extends ApiTestSupport {
     }
 
     @Test
+    void 사용자는_이름으로_본인의_예약_이력을_페이징_조회할_수_있다() {
+        dataInitializer.createReservationTime(LocalTime.of(10, 0));
+        dataInitializer.createReservationTime(LocalTime.of(11, 0));
+        dataInitializer.createReservationTime(LocalTime.of(12, 0));
+        dataInitializer.createTheme("귀신의집", "무서워요", "/images/themes/reservation.webp");
+        dataInitializer.createReservation("고래", TODAY.plusDays(1), 1L, 1L);
+        dataInitializer.createReservation("고래", TODAY.plusDays(2), 2L, 1L);
+        dataInitializer.createReservation("고래", TODAY.plusDays(3), 3L, 1L);
+
+        RestAssured.given().log().all()
+                .queryParam("name", "고래")
+                .queryParam("page", 1)
+                .queryParam("size", 2)
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("reservations.size()", is(1))
+                .body("reservations[0].id", is(3));
+    }
+
+    @Test
     void 예약을_생성한다() {
         dataInitializer.createReservationTime(LocalTime.now());
         dataInitializer.createTheme("귀신의집", "무서워요", "/images/themes/reservation.webp");

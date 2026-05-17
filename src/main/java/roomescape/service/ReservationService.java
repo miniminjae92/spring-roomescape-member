@@ -2,6 +2,7 @@ package roomescape.service;
 
 import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -43,8 +44,8 @@ public class ReservationService {
                 .toList();
     }
 
-    public List<ReservationResult> getReservationsByName(String name) {
-        return reservationRepository.findByName(name).stream()
+    public List<ReservationResult> getReservationHistoryByName(String name, ReservationPagingCondition condition) {
+        return reservationRepository.findAllByName(name, condition.size(), condition.offset()).stream()
                 .map(ReservationResult::from)
                 .toList();
     }
@@ -123,8 +124,10 @@ public class ReservationService {
     private void validateReservableDateTime(LocalDate date, ReservationTime time) {
         LocalDate today = LocalDate.now(clock);
         LocalTime now = LocalTime.now(clock);
+        LocalDateTime reservationDateTime = LocalDateTime.of(date, time.getStartAt());
+        LocalDateTime currentDateTime = LocalDateTime.of(today, now);
 
-        if (date.isBefore(today) || date.isEqual(today) && time.getStartAt().isBefore(now)) {
+        if (reservationDateTime.isBefore(currentDateTime)) {
             throw new InvalidReservationException("과거 날짜/시간으로는 예약할 수 없습니다.");
         }
         if (date.isAfter(today.plusDays(30))) {

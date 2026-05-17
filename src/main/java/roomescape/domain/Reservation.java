@@ -1,6 +1,7 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.Getter;
 import roomescape.global.exception.reservation.CancelledReservationException;
@@ -58,7 +59,9 @@ public class Reservation {
     }
 
     public boolean isExpired(LocalDate today, LocalTime now) {
-        return this.date.isBefore(today) || this.date.equals(today) && this.time.isBefore(now);
+        LocalDateTime reservationDateTime = LocalDateTime.of(this.date, this.time.getStartAt());
+        LocalDateTime currentDateTime = LocalDateTime.of(today, now);
+        return reservationDateTime.isBefore(currentDateTime);
     }
 
     private void validateDifferentSchedule(LocalDate date, ReservationTime time) {

@@ -76,7 +76,7 @@ public class ReservationRepository {
         return jdbcTemplate.query(sql, parameters, reservationRowMapper);
     }
 
-    public List<Reservation> findByName(String name) {
+    public List<Reservation> findAllByName(String name, int size, int offset) {
         String sql = """
                 SELECT
                     r.id,
@@ -94,9 +94,12 @@ public class ReservationRepository {
                 INNER JOIN theme t ON r.theme_id = t.id
                 WHERE r.name = :name
                 ORDER BY r.id
+                LIMIT :size OFFSET :offset
                 """;
         SqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("name", name);
+                .addValue("name", name)
+                .addValue("size", size)
+                .addValue("offset", offset);
         return jdbcTemplate.query(sql, parameters, reservationRowMapper);
     }
 

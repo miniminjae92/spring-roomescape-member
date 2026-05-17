@@ -74,8 +74,8 @@ export async function createReservation(payload) {
     return res.json();
 }
 
-export async function fetchMyReservations(name) {
-    const res = await fetch(`/reservations?name=${encodeURIComponent(name)}`);
+export async function fetchMyReservations(name, page = 0, size = 20) {
+    const res = await fetch(`/reservations?name=${encodeURIComponent(name)}&page=${page}&size=${size}`);
     if (!res.ok) throw new Error('Failed to fetch my reservations');
     const data = await res.json();
     return data.reservations || data;

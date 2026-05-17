@@ -51,22 +51,22 @@ class ReservationRepositoryTest {
     }
 
     @Test
-    void 이름으로_예약_목록을_조회한다() {
+    void 이름으로_예약_이력을_페이징_조회한다() {
         Reservation first = createReservation("고래", ten);
         createReservation("상어", eleven);
         Reservation second = createReservation("고래", noon);
 
-        List<Reservation> reservations = reservationRepository.findByName("고래");
+        List<Reservation> reservations = reservationRepository.findAllByName("고래", 1, 1);
 
         assertThat(reservations).extracting(Reservation::getId)
-                .containsExactly(first.getId(), second.getId());
+                .containsExactly(second.getId());
     }
 
     @Test
     void 이름에_해당하는_예약이_없으면_빈_목록을_반환한다() {
         createReservation("고래", ten);
 
-        List<Reservation> reservations = reservationRepository.findByName("상어");
+        List<Reservation> reservations = reservationRepository.findAllByName("상어", 20, 0);
 
         assertThat(reservations).isEmpty();
     }
