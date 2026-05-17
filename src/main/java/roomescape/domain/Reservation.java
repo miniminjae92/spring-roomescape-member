@@ -1,7 +1,6 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.Getter;
 import roomescape.global.exception.reservation.CancelledReservationException;
@@ -17,19 +16,17 @@ public class Reservation {
 
     private final Long id;
     private final String name;
-    private final LocalDate date;
-    private final ReservationTime time;
+    private final ReservationSchedule schedule;
     private final Theme theme;
     private final ReservationStatus status;
 
     private Reservation(Long id, String name, LocalDate date, ReservationTime time, Theme theme,
                         ReservationStatus status) {
         validateName(name);
-        validateNotNull(date, time, theme);
+        validateTheme(theme);
         this.id = id;
         this.name = name;
-        this.date = date;
-        this.time = time;
+        this.schedule = ReservationSchedule.of(date, time);
         this.theme = theme;
         this.status = status;
     }
@@ -51,17 +48,23 @@ public class Reservation {
 
     public Reservation cancel() {
         validateReserved();
-        return new Reservation(id, name, date, time, theme, ReservationStatus.CANCELLED);
+        return new Reservation(id, name, getDate(), getTime(), theme, ReservationStatus.CANCELLED);
     }
 
     public boolean hasSameSchedule(LocalDate date, ReservationTime time) {
-        return this.date.equals(date) && this.time.hasSameStartAt(time);
+        return schedule.hasSameSchedule(date, time);
     }
 
     public boolean isExpired(LocalDate today, LocalTime now) {
-        LocalDateTime reservationDateTime = LocalDateTime.of(this.date, this.time.getStartAt());
-        LocalDateTime currentDateTime = LocalDateTime.of(today, now);
-        return reservationDateTime.isBefore(currentDateTime);
+        return schedule.isExpired(today, now);
+    }
+
+    public LocalDate getDate() {
+        return schedule.getDate();
+    }
+
+    public ReservationTime getTime() {
+        return schedule.getTime();
     }
 
     private void validateDifferentSchedule(LocalDate date, ReservationTime time) {
@@ -85,9 +88,9 @@ public class Reservation {
         }
     }
 
-    private void validateNotNull(LocalDate date, ReservationTime time, Theme theme) {
-        if (date == null || time == null || theme == null) {
-            throw new InvalidReservationException("예약 날짜, 시간, 테마는 필수입니다.");
+    private void validateTheme(Theme theme) {
+        if (theme == null) {
+            throw new InvalidReservationException("예약 테마는 필수입니다.");
         }
     }
 
