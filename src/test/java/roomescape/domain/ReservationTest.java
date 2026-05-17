@@ -137,7 +137,7 @@ class ReservationTest {
         void validateTheme_NotNull() {
             assertThatThrownBy(() -> Reservation.createNew("Brown", date, time, null))
                     .isInstanceOf(InvalidReservationException.class)
-                    .hasMessageContaining("예약 날짜");
+                    .hasMessageContaining("예약 테마");
         }
     }
 
