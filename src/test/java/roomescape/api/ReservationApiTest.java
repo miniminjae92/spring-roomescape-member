@@ -309,7 +309,7 @@ class ReservationApiTest extends ApiTestSupport {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
-                .when().put("/reservations/1/cancellation")
+                .when().post("/reservations/1/cancellations")
                 .then().log().all()
                 .statusCode(200)
                 .body("status", is("CANCELLED"));
@@ -325,7 +325,7 @@ class ReservationApiTest extends ApiTestSupport {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(cancellationParams)
-                .when().put("/reservations/1/cancellation")
+                .when().post("/reservations/1/cancellations")
                 .then().log().all()
                 .statusCode(200)
                 .body("status", is("CANCELLED"));
@@ -363,7 +363,7 @@ class ReservationApiTest extends ApiTestSupport {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
-                .when().put("/reservations/999/cancellation")
+                .when().post("/reservations/999/cancellations")
                 .then().log().all()
                 .statusCode(404);
     }
@@ -454,7 +454,7 @@ class ReservationApiTest extends ApiTestSupport {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
-                .when().put("/reservations/1/cancellation")
+                .when().post("/reservations/1/cancellations")
                 .then().log().all()
                 .statusCode(409);
     }
@@ -486,7 +486,7 @@ class ReservationApiTest extends ApiTestSupport {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
-                .when().put("/reservations/1/cancellation")
+                .when().post("/reservations/1/cancellations")
                 .then().log().all()
                 .statusCode(409);
     }
@@ -535,7 +535,7 @@ class ReservationApiTest extends ApiTestSupport {
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(params)
-                .when().put("/reservations/1/cancellation")
+                .when().post("/reservations/1/cancellations")
                 .then().statusCode(200);
     }
 

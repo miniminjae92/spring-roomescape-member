@@ -95,8 +95,8 @@ export async function updateReservationSchedule(id, payload) {
 }
 
 export async function cancelMyReservation(id, payload) {
-    const res = await fetch(`/reservations/${id}/cancellation`, {
-        method: 'PUT',
+    const res = await fetch(`/reservations/${id}/cancellations`, {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
     });

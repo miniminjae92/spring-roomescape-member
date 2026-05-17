@@ -37,7 +37,7 @@
 ### 2.1. 예약 내역 검색
 - **트리거**: 이름 입력 폼에서 '조회' 버튼 클릭
 - **로딩 처리**: 조회 버튼 비활성화
-- **API 호출**: `GET /reservations?name={name}`
+- **API 호출**: `GET /reservations?name={name}&page={page}&size={size}`
 - **성공 시 화면**: 
   - 예약된 내역 리스트 렌더링
   - 내역이 없을 경우 빈 상태(Empty State) UI 표시 ("예약된 내역이 없습니다")
@@ -53,6 +53,6 @@
 ### 2.3. 예약 취소
 - **트리거**: 개별 예약 내역의 '취소' 버튼 클릭
 - **로딩 처리**: 해당 취소 버튼 비활성화
-- **API 호출**: `PUT /reservations/{id}/cancellation`
+- **API 호출**: `POST /reservations/{id}/cancellations`
 - **성공 시 화면**: 토스트 알림("예약이 취소되었습니다") 표시 후, 화면 리스트에서 해당 내역 DOM 제거
 - **실패 시 화면**: 토스트 알림으로 취소 실패 안내
